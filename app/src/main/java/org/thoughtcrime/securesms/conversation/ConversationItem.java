@@ -806,12 +806,10 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
     bodyText.setLinkTextColor(colorizer.getIncomingBodyTextColor(context, hasWallpaper));
 
     if (messageRecord.isOutgoing() && !messageRecord.isRemoteDelete()) {
-      bodyBubble.getBackground().setColorFilter(recipient.getChatColors().getChatBubbleColorFilter());
-      bodyText.setTextColor(colorizer.getOutgoingBodyTextColor(context));
-      bodyText.setLinkTextColor(colorizer.getOutgoingBodyTextColor(context));
-      footer.setTextColor(colorizer.getOutgoingFooterTextColor(context));
-      footer.setIconColor(colorizer.getOutgoingFooterIconColor(context));
-      footer.setRevealDotColor(colorizer.getOutgoingFooterIconColor(context));
+      bodyBubble.getBackground().setColorFilter(getDefaultBubbleColor(hasWallpaper), PorterDuff.Mode.SRC_IN);
+      footer.setTextColor(colorizer.getIncomingFooterTextColor(context, hasWallpaper));
+      footer.setIconColor(colorizer.getIncomingFooterIconColor(context, hasWallpaper));
+      footer.setRevealDotColor(colorizer.getIncomingFooterIconColor(context, hasWallpaper));
       footer.setOnlyShowSendingStatus(false, messageRecord);
     } else if (messageRecord.isRemoteDelete()) {
       if (hasWallpaper) {
@@ -824,10 +822,12 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
       footer.setTextColor(ContextCompat.getColor(context, R.color.signal_text_secondary));
       footer.setOnlyShowSendingStatus(messageRecord.isRemoteDelete(), messageRecord);
     } else {
-      bodyBubble.getBackground().setColorFilter(getDefaultBubbleColor(hasWallpaper), PorterDuff.Mode.SRC_IN);
-      footer.setTextColor(colorizer.getIncomingFooterTextColor(context, hasWallpaper));
-      footer.setIconColor(colorizer.getIncomingFooterIconColor(context, hasWallpaper));
-      footer.setRevealDotColor(colorizer.getIncomingFooterIconColor(context, hasWallpaper));
+      bodyBubble.getBackground().setColorFilter(recipient.getChatColors().asSingleColor(), PorterDuff.Mode.SRC_IN);
+      bodyText.setTextColor(colorizer.getOutgoingBodyTextColor(context));
+      bodyText.setLinkTextColor(colorizer.getOutgoingBodyTextColor(context));
+      footer.setTextColor(colorizer.getOutgoingFooterTextColor(context));
+      footer.setIconColor(colorizer.getOutgoingFooterIconColor(context));
+      footer.setRevealDotColor(colorizer.getOutgoingFooterIconColor(context));
       footer.setOnlyShowSendingStatus(false, messageRecord);
     }
 
@@ -862,12 +862,12 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
           audioViewStub.get().setTint(getContext().getResources().getColor(R.color.conversation_item_incoming_audio_foreground_tint_wallpaper));
           audioViewStub.get().setProgressAndPlayBackgroundTint(getContext().getResources().getColor(R.color.conversation_item_incoming_audio_play_pause_background_tint_wallpaper));
         } else {
-          audioViewStub.get().setTint(getContext().getResources().getColor(R.color.conversation_item_incoming_audio_foreground_tint_normal));
-          audioViewStub.get().setProgressAndPlayBackgroundTint(getContext().getResources().getColor(R.color.conversation_item_incoming_audio_play_pause_background_tint_normal));
+          audioViewStub.get().setTint(getContext().getResources().getColor(R.color.conversation_item_outgoing_audio_foreground_tint));
+          audioViewStub.get().setProgressAndPlayBackgroundTint(getContext().getResources().getColor(R.color.signal_colorTransparent2));
         }
       } else {
-        audioViewStub.get().setTint(getContext().getResources().getColor(R.color.conversation_item_outgoing_audio_foreground_tint));
-        audioViewStub.get().setProgressAndPlayBackgroundTint(getContext().getResources().getColor(R.color.signal_colorTransparent2));
+        audioViewStub.get().setTint(getContext().getResources().getColor(R.color.conversation_item_incoming_audio_foreground_tint_normal));
+        audioViewStub.get().setProgressAndPlayBackgroundTint(getContext().getResources().getColor(R.color.conversation_item_incoming_audio_play_pause_background_tint_normal));
       }
     }
   }
@@ -1801,7 +1801,7 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
 
   private void setGroupAuthorColor(@NonNull MessageRecord messageRecord, boolean hasWallpaper, @NonNull Colorizer colorizer) {
     if (groupSender != null) {
-      groupSender.setTextColor(colorizer.getIncomingGroupSenderColor(getContext(), messageRecord.getFromRecipient()));
+      groupSender.setTextColor(colorizer.getOutgoingFooterTextColor(getContext()));
     }
   }
 

@@ -1356,7 +1356,6 @@ class ConversationFragment :
   }
 
   private fun presentChatColors(chatColors: ChatColors) {
-    recyclerViewColorizer.setChatColors(chatColors)
     binding.scrollToMention.setUnreadCountBackgroundTint(chatColors.asSingleColor())
     binding.scrollToBottom.setUnreadCountBackgroundTint(chatColors.asSingleColor())
     binding.conversationInputPanel.buttonToggle.background.apply {
@@ -1541,7 +1540,6 @@ class ConversationFragment :
     adapter.setPagingController(viewModel.pagingController)
 
     recyclerViewColorizer = RecyclerViewColorizer(binding.conversationItemRecycler)
-    recyclerViewColorizer.setChatColors(args.chatColors)
 
     binding.conversationItemRecycler.adapter = ConcatAdapter(typingIndicatorAdapter, adapter)
     multiselectItemDecoration = MultiselectItemDecoration(
